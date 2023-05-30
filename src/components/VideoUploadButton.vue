@@ -33,14 +33,15 @@ export default {
       console.log("Event target: ", file);
       // Upload to Supabase
 
+      const videoFile = event.target.files[0];
       const { data, error } = await supabase.storage
         .from("videos")
-        .upload(`${file.name}`, decode("base64FileData"), {
-          contentType: "video/mp4",
+        .upload("public/testing.mp4", videoFile, {
+          cacheControl: "3600",
+          upsert: false,
         });
-
-      console.log(data);
-      console.log(error);
+        console.log(data);
+        
     },
     onButtonClick() {
       const videoInput = document.getElementById("video-input");
