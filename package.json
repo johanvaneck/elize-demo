@@ -17,10 +17,14 @@
     "@capacitor/status-bar": "5.0.2",
     "@ionic/vue": "^7.0.0",
     "@ionic/vue-router": "^7.0.0",
+    "@supabase/supabase-js": "^2.24.0",
+    "base64-arraybuffer": "^1.0.2",
     "core-js": "^3.6.5",
     "ionicons": "^7.0.0",
     "vue": "^3.2.47",
-    "vue-router": "^4.1.6"
+    "vue-media-upload": "^2.1.2",
+    "vue-router": "^4.1.6",
+    "vue-upload-component": "^2.8.23"
   },
   "devDependencies": {
     "@capacitor/cli": "5.0.4",
