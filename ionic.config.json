@@ -1,0 +1,8 @@
+{
+  "name": "Elize demo",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue",
+  "id": "a9bdc50a"
+}
