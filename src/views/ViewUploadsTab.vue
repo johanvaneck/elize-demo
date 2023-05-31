@@ -5,8 +5,8 @@
         <ion-title>View Uploads</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true">
-      <ExploreContainer name="Settings"/>
+    <ion-content class="ion-text-center" :fullscreen="true">
+      <ItemsList />
     </ion-content>
   </ion-page>
 </template>
@@ -19,5 +19,17 @@ import {
   IonTitle,
   IonContent,
 } from "@ionic/vue";
-import ExploreContainer from "@/components/ExploreContainer.vue";
+import { defineComponent } from "vue";
+import ItemsList from "@/components/ItemsList.vue";
+
+defineComponent({
+  components: {
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    ItemsList,
+  },
+});
 </script>

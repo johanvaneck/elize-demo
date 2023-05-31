@@ -7,8 +7,7 @@
 <script lang="ts">
 import supabaseClient from "@/supabase";
 import { IonButton } from "@ionic/vue";
-import { defineComponent } from "vue";
-export default defineComponent({
+export default {
   components: {
     IonButton,
   },
@@ -24,12 +23,12 @@ export default defineComponent({
         this.loggedIn = true;
       } else {
         const { error } = await supabaseClient.auth.signInWithPassword({
-          email: "jve.software@gmail.com",
+          email: "testing.jane.doe@gmail.com",
           password: "verysecurepassword",
         });
         this.loggedIn = !error;
       }
     },
   },
-});
+};
 </script>
