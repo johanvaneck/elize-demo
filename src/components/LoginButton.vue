@@ -1,13 +1,14 @@
 <template>
   <ion-button :disabled="loggedIn" v-bind:color="loggedIn ? 'primary' : 'danger'" @click="signIn">
-    {{ loggedIn ? "Logged in": "Log in" }}
+    {{ loggedIn ? "Logged in" : "Log in" }}
   </ion-button>
 </template>
 
 <script lang="ts">
 import supabaseClient from "@/supabase";
 import { IonButton } from "@ionic/vue";
-export default {
+import { defineComponent } from "vue";
+export default defineComponent({
   components: {
     IonButton,
   },
@@ -30,5 +31,5 @@ export default {
       }
     },
   },
-};
+});
 </script>
