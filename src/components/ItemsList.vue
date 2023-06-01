@@ -94,7 +94,7 @@ export default defineComponent({
           }))
           break;
 
-        case 'video':
+        case 'video': {
           this.videos = tableData.map(it => ({
             id: it['id'],
             created_at: it['created_at'],
@@ -104,11 +104,12 @@ export default defineComponent({
             reviewed_by: it['reviewed_by'],
             date_recorded: it['date_recorded'],
           }))
+          this.videoUrl = process.env.VUE_APP_SUPABASE_URL +
+            "/storage/v1/object/public/videos/" +
+            this.videos[0]['bucket_path'] || ""
+        }
           break;
       }
-      this.videoUrl = process.env.VUE_APP_SUPABASE_URL +
-        "/storage/v1/object/public/videos/" +
-        this.videos[0]['bucket_path'] || ""
     },
   },
 });
