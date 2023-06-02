@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import supabaseClient from "@/supabase";
+import supabase from "@/supabase";
 import { IonButton } from "@ionic/vue";
 import { defineComponent } from "vue";
 export default defineComponent({
@@ -19,11 +19,11 @@ export default defineComponent({
     async signIn() {
       const {
         data: { session },
-      } = await supabaseClient.auth.getSession();
-      if (!session) {
+      } = await supabase.auth.getSession();
+      if (session) {
         this.loggedIn = true;
       } else {
-        const { error } = await supabaseClient.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
           email: "testing.jane.doe@gmail.com",
           password: "verysecurepassword",
         });

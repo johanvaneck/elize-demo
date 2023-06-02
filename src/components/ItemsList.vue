@@ -21,6 +21,7 @@
     {{ videoUrl }}
   </a>
 </template>
+
 <script lang="ts">
 import supabase from "@/supabase";
 import {
@@ -106,7 +107,7 @@ export default defineComponent({
           }))
           this.videoUrl = process.env.VUE_APP_SUPABASE_URL +
             "/storage/v1/object/public/videos/" +
-            this.videos[0]['bucket_path'] || ""
+            this.videos[this.videos.length - 1]['bucket_path'] || ""
         }
           break;
       }

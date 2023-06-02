@@ -1,13 +1,20 @@
 <template>
   <div>
+    <ion-text>
+      <h1>
+        Click to upload
+      </h1>
+    </ion-text>
     <ion-button @click="onButtonClick">Upload Video</ion-button>
-    <input
-      id="video-input"
-      style="display: none"
-      name="video-upload"
-      type="file"
-      @change="onChange($event)"
-    />
+    <input id="video-input" style="display: none" name="video-upload" type="file" @change="onChange($event)" />
+    <ion-text>
+      <h1>
+        Feedback
+      </h1>
+      <pre>
+        {{ feedback }}
+      </pre>
+    </ion-text>
   </div>
 </template>
 
@@ -15,13 +22,14 @@
 import supabase from "@/supabase";
 import { IonButton } from "@ionic/vue";
 import { uuid } from "@supabase/gotrue-js/dist/module/lib/helpers";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
   components: {
     IonButton,
   },
   data() {
-    return {};
+    return { feedback: "" };
   },
   methods: {
     async onChange(event: any) {
@@ -31,49 +39,56 @@ export default {
         return;
       }
 
-      // Upload to Supabase
-      const bucketPath = `public/video-${uuid()}.mp4`;
-      const videoFile = event.target.files[0];
-      const { data: bucketData } = await supabase.storage
-        .from("videos")
-        .upload(bucketPath, videoFile, {
-          cacheControl: "3600",
-          upsert: false,
-        });
-
-      if (bucketData) {
+      try {
+        //// Get required data first
         // Get parent data
         const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        const { data: parentData, error } = await supabase
+          data: { user }
+        } = await supabase.auth.getUser()
+        const { data: parentData, error: parentError } = await supabase
           .from("parent")
           .select()
-          .eq("email", session?.user.email);
+          .eq("email", user?.email);
 
-        console.log("Parent data:", parentData);
-        console.log("Parent error:", error);
+        this.feedback += (parentError ? "\nparentError: " + parentError.message : "")
+        this.feedback += (parentData ? "\nparentSuccess: " + parentData : "")
 
         const parentId = parentData ? parentData[0].id : "";
 
         // Get child data
-        const { data: childData } = await supabase
+        const { data: childData, error: childError } = await supabase
           .from("child")
           .select()
           .eq("parent_id", parentId);
 
-        console.log("Child data:", childData);
+        this.feedback += (childError ? "\nchildError: " + childError.message : "")
+        this.feedback += (childData ? "\nchildSuccess: " + childData : "")
 
         const childId = childData ? childData[0].id : "";
 
+        // Upload to Supabase
+        const bucketPath = `public/video-${uuid()}.mp4`;
+        const videoFile = event.target.files[0];
+        const { data: bucketData, error: bucketError } = await supabase.storage
+          .from("videos")
+          .upload(bucketPath, videoFile, {
+            cacheControl: "3600",
+            upsert: false,
+          });
+        this.feedback += (bucketError ? "\nbucketError: " + bucketError.message : "")
+        this.feedback += (bucketData ? "\nbucketSuccess: " + bucketData : "")
+
         // Insert video data
-        const { data: videoData } = await supabase.from("video").insert({
+        const { error: videoError } = await supabase.from("video").insert({
           child_id: childId,
           date_recorded: new Date(),
           bucket_path: bucketPath,
         });
 
-        console.log("Video data:", videoData);
+        this.feedback += (videoError ? "\nvideoError: " + videoError.message : "")
+        this.feedback += (!videoError ? "\nvideoSuccess: " + `${bucketPath} added to table.` : "")
+      } catch (e) {
+        console.log(e)
       }
     },
     onButtonClick() {
@@ -81,5 +96,5 @@ export default {
       videoInput?.click();
     },
   },
-};
+});
 </script>
